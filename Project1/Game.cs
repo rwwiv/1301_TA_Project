@@ -11,11 +11,8 @@ namespace Project1
 
         bool firstTimeInRoom = true;
         int i = 0;
-
-
-        bool drawerOpen = false;
-        bool hasKey = false;
         string cellDoorState = "locked";
+
 
         public void Play()
         {
@@ -25,21 +22,9 @@ namespace Project1
                 {
                     Cell();
                 }
-                else if (scene == "LivingRoom")
+                else if (scene == "Hallway1")
                 {
-                    LivingRoom();
-                }
-                else if (scene == "Bedroom")
-                {
-                    Bedroom();
-                }
-                else if (scene == "Kitchen")
-                {
-                    Kitchen();
-                }
-                else if (scene == "Outside")
-                {
-                    Outside();
+                    Hallway1();
                 }
                 else
                 {
@@ -52,13 +37,13 @@ namespace Project1
 
         private void Cell()
         {
-            GameTools.ChangeTextColor(ConsoleColor.Red);
             if (firstTimeInRoom == true)
             {
                 for (int i = 0; i < 50; i++)
                 {
                     Console.WriteLine();
                 }
+                GameTools.ChangeTextColor(ConsoleColor.Red);
                 GameTools.WriteParagraph(@"
 You awake. A cold bed. Stone. The sound of water dripping. Plunk. 
 No light. Where are you?! As your eyes adjust, you see smooth walls, a barred door.
@@ -70,8 +55,10 @@ A cell? Why?
             {
                 Console.WriteLine();
                 GameTools.ChangeTextColor(ConsoleColor.Black, ConsoleColor.White);
-                Console.WriteLine("Cell");
+                Console.Write("Cell");
+                //Somtimes bugs out and writes white line if not like this
                 GameTools.ChangeTextColor(ConsoleColor.Red, ConsoleColor.Black);
+                Console.WriteLine();
                 Console.WriteLine();
                 GameTools.WriteParagraph(@"
 You are still in the cell, still unsure why you ended up here.
@@ -105,11 +92,27 @@ You hear the sound of a key turn, and a voice whispers
 
             string[] wordList = input.Split(' ');
 
-            //Console.WriteLine(GameTools.BetterVerb(wordList[0]).Equals("open")
-            //    && GameTools.betterObject(wordList[1]).Equals("door")
+
+            //Console.WriteLine(betterVerb.Equals("open")
+            //    && betterObject.Equals("door")
             //    && i < 3);
 
-            if (GameTools.BetterVerb(wordList[0]).Equals("wait"))
+            if (wordList.Length == 2
+                && GameTools.BetterVerb(wordList[0]).Equals("wait")
+                && GameTools.betterObject(wordList[1]).Equals("impatiently"))
+            {
+                for (int i = 0; i < 50; i++)
+                {
+                    Console.WriteLine();
+                }
+                Console.Write("\nYou wait");
+                GameTools.ChangeTextColor(ConsoleColor.Red);
+                Console.Write(" impatiently ");
+                Console.ResetColor();
+                Console.Write("for a couple minutes.");
+                i++;
+            }
+            else if (GameTools.BetterVerb(wordList[0]).Equals("wait"))
             {
                 for (int i = 0; i < 50; i++)
                 {
@@ -118,6 +121,7 @@ You hear the sound of a key turn, and a voice whispers
                 Console.WriteLine("\nYou wait patiently for a couple minutes.");
                 i++;
             }
+
             else if (GameTools.BetterVerb(wordList[0]).Equals("listen") && i != 3)
             {
                 for (int i = 0; i < 50; i++)
@@ -156,9 +160,25 @@ You hear the sound of a key turn, and a voice whispers
                 {
                     Console.WriteLine();
                 }
-                GameTools.WriteParagraph(@"You open the now unlocked door into a darkened hallway. Maybe it's safer in the cell...");
+                GameTools.WriteParagraph(@"You open the now unlocked door into a dimly lit hallway. Maybe it's safer in the cell...");
                 i++;
                 cellDoorState = "open";
+            }
+            else if (wordList.Length == 1
+                && GameTools.BetterVerb(wordList[0]).Equals("open"))
+            {
+                Console.WriteLine("Open what?");
+            }
+            else if (GameTools.BetterVerb(wordList[0]).Equals("go")
+                && GameTools.betterObject(wordList[1]).Equals("door"))
+            {
+                scene = "Hallway1";
+                firstTimeInRoom = true;
+            }
+            else if (GameTools.BetterVerb(wordList[0]).Equals("cheatCode1"))
+            {
+                scene = "Hallway1";
+                firstTimeInRoom = true;
             }
             else
             {
@@ -168,161 +188,39 @@ You hear the sound of a key turn, and a voice whispers
                 }
                 Console.WriteLine("\nWhat are you trying to do?");
             }
-            
-        }
-
-        private void Kitchen()
-        {
-            Console.WriteLine();
-            GameTools.WriteColoredParagraph("KITCHEN:", ConsoleColor.White, ConsoleColor.DarkGray);
-            Console.WriteLine();
-            GameTools.WriteParagraph(@"
-You are in a kitchen, complete with hideous 1960's yellow appliances. There
-is some tasty looking food on an island in the center of the room. There
-are also numerous instruments of cutting that look like they might be able
-to slice through a wooden door, but you are such a pacifist, you won't
-consider even harming a dead tree, so you ignore them. There are doors
-to the south and west.
-                ");
-            Console.WriteLine();
-            GameTools.WriteColoredParagraph("You can go (S)outh or (W)est, or you can (C)how down.", ConsoleColor.Black, ConsoleColor.Cyan);
-
-            string choice = GameTools.GetChoice("s", "w", "c");
-
-            if (choice == "s")
-            {
-                scene = "LivingRoom";
-            }
-            else if (choice == "w")
-            {
-                scene = "Cell";
-            }
-            else if (choice == "c")
-            {
-                Console.WriteLine();
-                Console.WriteLine("Ooooohhhh man! That hit the spot!");
-                scene = "Kitchen";
-            }
-        }
-
-        private void Bedroom()
-        {
-            Console.WriteLine();
-            GameTools.WriteColoredParagraph("BEDROOM:", ConsoleColor.White, ConsoleColor.DarkGray);
-            Console.WriteLine();
-            GameTools.WriteParagraph(@"
-You are in the bedroom. It is a plain bedroom with carpet, four beige
-walls, and a bed.
-                ");
-            Console.WriteLine();
-
-            string choice;
-            if (drawerOpen == false)
+            if (i == 15)
             {
                 GameTools.WriteParagraph(@"
-You see a nightstand with a closed drawer. There are doors to the 
-north and east.
-                    ");
-                Console.WriteLine();
-                GameTools.WriteColoredParagraph("You can go (N)orth or (E)ast, or you can (O)pen the drawer.", ConsoleColor.Black, ConsoleColor.Cyan);
-                choice = GameTools.GetChoice("n", "e", "o");
+Well, you waited too long and now you're dead.... Good Job?
+");
+                scene = "GameOver";
             }
-            else if (hasKey == false)
+        }
+        private void Hallway1()
+        {
+            if (firstTimeInRoom == true)
             {
+                for (int i = 0; i < 50; i++)
+                {
+                    Console.WriteLine();
+                }
+                GameTools.ChangeTextColor(ConsoleColor.Red);
                 GameTools.WriteParagraph(@"
-You see a nightstand with an open drawer. Inside the drawer is a key.
-There are doors to the north and east.
-                    ");
+You enter the hallway. The area in front of you is dimly lit by the torches on either side of the tight walls.
+The sounds you heard earlier are slightly more distinct, although you still can't make out the source.
+");
+                Console.ResetColor();
                 Console.WriteLine();
-                GameTools.WriteColoredParagraph("You can go (N)orth or (E)ast, or you can (T)ake the key.", ConsoleColor.Black, ConsoleColor.Cyan);
-                choice = GameTools.GetChoice("n", "e", "t");
+                firstTimeInRoom = false;
             }
             else
             {
-                GameTools.WriteParagraph(@"
-You see a nightstand with an open drawer. The drawer appears to be empty.
-There are doors to the north and east.
-                ");
-                Console.WriteLine();
-                GameTools.WriteColoredParagraph("You can go (N)orth or (E)ast.", ConsoleColor.Black, ConsoleColor.Cyan);
-                choice = GameTools.GetChoice("n", "e");
-            }
-
-            if (choice == "n")
-            {
-                scene = "Cell";
-            }
-            else if (choice == "e")
-            {
-                scene = "LivingRoom";
-            }
-            else if (choice == "o")
-            {
-                drawerOpen = true;
-                scene = "Bedroom";
-            }
-            else if (choice == "t")
-            {
-                hasKey = true;
-                scene = "Bedroom";
-            }
-        }
-
-        private void LivingRoom()
-        {
-            Console.WriteLine();
-            GameTools.WriteColoredParagraph("LIVING ROOM:", ConsoleColor.White, ConsoleColor.DarkGray);
-            Console.WriteLine();
-            GameTools.WriteParagraph(@"
-You are standing in a living room. It has beautiful hardwood floors, a
-pfabulous plush couch, an amazing antique coffee table, and a ridiculously
-tacky replica of the Mona Lisa on a canvas hanging on the wall.
-In addition to open doors to the west and north, the front door to the
-house appears to be to your south.
-                ");
-            Console.WriteLine();
-            GameTools.WriteColoredParagraph("You can go (N)orth or (W)east or (S)outh.", ConsoleColor.Black, ConsoleColor.Cyan);
-
-            string choice = GameTools.GetChoice("n", "w", "s");
-
-            if (choice == "n")
-            {
-                scene = "Kitchen";
-            }
-            else if (choice == "w")
-            {
-                scene = "Bedroom";
-            }
-            else if (choice == "s")
-            {
-                if (hasKey == true)
+                for (int i = 0; i < 50; i++)
                 {
                     Console.WriteLine();
-                    Console.WriteLine("You unlock the front door and step...");
-                    scene = "Outside";
                 }
-                else
-                {
-                    Console.WriteLine();
-                    GameTools.WriteColoredParagraph(@"
-Hmm, the door appears to be locked. What's a person to do? I mean how can you
-possibly get past a locked door? Oh gee, I think I might be trapped in here forever.
-                    ", ConsoleColor.Red, ConsoleColor.Yellow);
-                    scene = "LivingRoom";
-                }
+
             }
         }
-
-        private void Outside()
-        {
-            Console.WriteLine();
-            GameTools.WriteColoredParagraph("OUTSIDE:", ConsoleColor.White, ConsoleColor.DarkGray);
-            Console.WriteLine();
-            Console.WriteLine("You are standing outside. Well, that's it. Wasn't this a fun game?");
-            Console.WriteLine();
-            Console.WriteLine("Thanks for playing!!");
-            Console.WriteLine();
-            scene = "GameOver";
-        }
-    }
+   }
 }

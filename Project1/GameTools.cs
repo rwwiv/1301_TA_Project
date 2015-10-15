@@ -145,7 +145,7 @@ public static class GameTools
         }
     }
 
-    public static string BetterVerb(string input)
+    public static string BetterVerb( string input)
     {
         Dictionary<string, string[]> dictVerb = new Dictionary<string, string[]>()
         {
@@ -155,7 +155,10 @@ public static class GameTools
             {"wait", new string[] { "wait", "pause"} },
             {"listen", new string[] { "listen" , "hear" , "eavesdrop"} },
             {"check", new string[] { "check" } },
-            {"open", new string[] { "open" , "pull"} }
+            {"open", new string[] { "open" , "pull"} },
+            {"go", new string[] { "leave" , "go" , "exit", "enter"} },
+            {"cheatCode1", new string[] {"qwertyuiop"} },
+
 
         };
 
@@ -176,7 +179,15 @@ public static class GameTools
     {
         Dictionary<string, string[]> dictNoun = new Dictionary<string, string[]>()
         {
-            {"door", new string[] { "door", "barred door", "solid door"} }
+            {"impatiently", new string[] { "impatiently" } },
+            {"door", new string[] { "door", "barred door", "solid door"} },
+            {"back", new string[] {"back", "behind", "backward", "backwards"} },
+            {"forward", new string[] {"forward", "front", "forwards"} },
+            {"left", new string[] {"left"} },
+            {"right", new string[] {"right"} },
+
+
+
 
         };
 
